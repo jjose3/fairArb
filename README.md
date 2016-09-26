@@ -1,4 +1,6 @@
 Fair Priority 
+
+
 When one resource is shared among many agents, those
 agents must bid on the resource before using it. An arbiter indicates which agent has
 won the resource. A simple implementation might assign static priority (e.g. MSB
