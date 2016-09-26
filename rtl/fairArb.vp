@@ -1,6 +1,14 @@
 // fairArb.vp
 
-//; my $bW = parameter( name=>"bitWidth", val=>16, doc=>"Width of input");
+//; # Good Habits
+//; use strict ;                   # Use a strict interpretation
+//; use warnings FATAL=>qw(all);   # Turn warnings into errors
+//; use diagnostics ;              # Print helpful info, for errors
+//; use Math::Complex;
+
+//; #Parameters
+//; my $bW = parameter( name=>"bitWidth", val=>4, doc=>"Width of input");
+//; my $cbW = logn($self->get_param("bitWidth"), 2);
 
 module `mname` (
 input logic [`$bW-1`:0] bids,
@@ -9,6 +17,64 @@ input logic clk,
 input logic rst
 );
 
-// Empty module
+logic [`$cbW-1`:0] pctr;
+logic [`$cbW-1`:0] pctr_nxt;
+logic [`$bW-1`:0] shift_bids;
+logic [`$bW-1`:0] shift_wins;
+logic [`$bW-1`:0] wins_nxt;
+
+
+always_comb begin
+	priority case (1'b1)
+//; for( my $i = 0 ; $i < $bW-1 ; $i++ ){
+		wins[`$i`] : pctr_nxt = `$cbW`'d`$i+1`;
+//;}
+		wins[`$bW-1`] : pctr_nxt = `$cbW`'d0;
+		default : pctr_nxt = `$cbW`'d0;
+	endcase
+end
+
+always_comb begin
+	case (pctr)
+		`$cbW`'d0 : shift_bids = bids[`$bW-1`:0];
+		//; for( my $i = 1 ; $i < $bW ; $i++ ){
+		`$cbW`'d`$i` : shift_bids = {bids[`$i-1`:0],bids[`$bW-1`:`$i`]};
+		//;}
+
+	endcase
+end
+
+always_comb begin
+	priority case (1'b1)
+		//; for( my $i = 0 ; $i < $bW ; $i++ ){
+		shift_bids[`$i`] : shift_wins[`$bW-1`:0] = `$bW`'b`'0'x($bW-$i-1) . '1' .'0'x($i)`;
+		//;}
+		default : shift_wins[`$bW-1`:0] = `$bW`'d0;
+
+	endcase
+end
+
+always_comb begin
+	case (pctr)
+		`$cbW`'d0 : wins_nxt = shift_wins[`$bW-1`:0];
+		//; for( my $i = 1 ; $i < $bW ; $i++ ){
+		`$cbW`'d`$i` : wins_nxt = {shift_wins[`$bW-$i-1`:0],shift_wins[`$bW-1`:`$bW-$i`]};
+		//;}
+
+	endcase
+end
+
+///////FLops instantiation
+
+//; for( my $i = 0 ; $i < $bW ; $i++ ){
+//;  my $dff = generate_base( "dff" , "D_FLIP_FLOP_WINS".$i);
+`$dff->instantiate()` ( .d(wins_nxt[`$i`]), .q(wins[`$i`]), .clk(clk), .rst(rst));
+//; }
+
+//; for( my $i = 0 ; $i < $cbW ; $i++ ){
+//;  my $dff = generate_base( "dff" , "D_FLIP_FLOP_PCTR".$i);
+`$dff->instantiate()` ( .d(pctr_nxt[`$i`]), .q(pctr[`$i`]), .clk(clk), .rst(rst));
+//; }
+
 
 endmodule: `mname`
