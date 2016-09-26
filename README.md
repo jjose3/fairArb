@@ -10,15 +10,25 @@ how we might guarantee that all bidders will eventually be able to make forward
 progress.
 
 // fairArb.vp
+
 //; my $bW = parameter( name=>"bitWidth", val=>16, doc=>"Width of input");
+
 module `mname` (
+
 input logic [`$bW-1`:0] bids,
+
 output logic [`$bW-1`:0] wins,
+
 input logic clk,
+
 input logic rst
+
 );
+
 // Empty module
+
 endmodule: `mname`
+
 
 The fairArb unit will receive a set of bids every cycle (a bit string where one indicate
 bid and a zero indicates no-bid for each of 16 agents) and must return the winning bid
