@@ -1,0 +1,14 @@
+// fairArb.vp
+
+//; my $bW = parameter( name=>"bitWidth", val=>16, doc=>"Width of input");
+
+module `mname` (
+input logic [`$bW-1`:0] bids,
+output logic [`$bW-1`:0] wins,
+input logic clk,
+input logic rst
+);
+
+// Empty module
+
+endmodule: `mname`
