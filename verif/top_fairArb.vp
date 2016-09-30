@@ -64,12 +64,16 @@ module `mname` ();
 	repeat (10) @ (posedge clk);
 	bids <= 4'b1001;
 	repeat (10) @ (posedge clk);
-	bids <= 4'b0000;
-	repeat(5) @(posedge clk );
 	cnt = 0;
-	while(cnt < 20) begin
+	while(cnt < 5) begin
 	bids <= $random();
 	repeat (1) @ (posedge clk);
+	cnt = cnt + 1;
+	end
+	cnt = 0;
+	while(cnt < 5) begin
+	bids <= $random();
+	repeat (3) @ (posedge clk);
 	cnt = cnt + 1;
 	end
 	bids <= 4'b0000;
