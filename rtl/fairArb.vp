@@ -26,10 +26,9 @@ logic [`$bW-1`:0] wins_nxt;
 
 always_comb begin
 	priority case (1'b1)
-//; for( my $i = 0 ; $i < $bW-1 ; $i++ ){
-		wins[`$i`] : pctr = `$cbW`'d`$i+1`;
+//; for( my $i = 0 ; $i < $bW ; $i++ ){
+		wins[`$i`] : pctr = `$cbW`'d`$i`;
 //;}
-		wins[`$bW-1`] : pctr = `$cbW`'d0;
 		default : pctr = `$cbW`'d0;
 	endcase
 end
@@ -46,7 +45,7 @@ end
 
 always_comb begin
 	priority case (1'b1)
-		//; for( my $i = 0 ; $i < $bW ; $i++ ){
+		//; for( my $i = $bW-1 ; $i >= 0 ; $i-- ){
 		shift_bids[`$i`] : shift_wins[`$bW-1`:0] = `$bW`'b`'0'x($bW-$i-1) . '1' .'0'x($i)`;
 		//;}
 		default : shift_wins[`$bW-1`:0] = `$bW`'d0;
