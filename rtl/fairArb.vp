@@ -27,10 +27,10 @@ logic [`$bW-1`:0] wins_nxt;
 always_comb begin
 	priority case (1'b1)
 //; for( my $i = 0 ; $i < $bW-1 ; $i++ ){
-		wins[`$i`] : pctr_nxt = `$cbW`'d`$i+1`;
+		wins[`$i`] : pctr = `$cbW`'d`$i+1`;
 //;}
-		wins[`$bW-1`] : pctr_nxt = `$cbW`'d0;
-		default : pctr_nxt = `$cbW`'d0;
+		wins[`$bW-1`] : pctr = `$cbW`'d0;
+		default : pctr = `$cbW`'d0;
 	endcase
 end
 
@@ -71,10 +71,10 @@ end
 `$dff->instantiate()` ( .d(wins_nxt[`$i`]), .q(wins[`$i`]), .clk(clk), .rst(rst));
 //; }
 
-//; for( my $i = 0 ; $i < $cbW ; $i++ ){
-//;  my $dff = generate_base( "dff" , "D_FLIP_FLOP_PCTR".$i);
-`$dff->instantiate()` ( .d(pctr_nxt[`$i`]), .q(pctr[`$i`]), .clk(clk), .rst(rst));
-//; }
+//;# for( my $i = 0 ; $i < $cbW ; $i++ ){
+//;#  my $dff = generate_base( "dff" , "D_FLIP_FLOP_PCTR".$i);
+//;#`$dff->instantiate()` ( .d(pctr_nxt[`$i`]), .q(pctr[`$i`]), .clk(clk), .rst(rst));
+//;# }
 
 
 endmodule: `mname`

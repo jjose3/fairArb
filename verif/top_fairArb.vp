@@ -1,0 +1,87 @@
+//top_fairArb.vp
+//; use Math::Complex;
+
+
+module `mname` ();
+
+//; my $dut = generate_base("fairArb", "my_fairArb");
+//; my $bW = $dut->get_param("bitWidth");
+//; my $cbW = logn($bW, 2);
+
+//; my $gb = generate("generic_bench", "BASIC_BENCH");
+
+//; my $pc = generate("cycle_counter", "PERF_COUNT", CycleName=>"multRate_cyc");
+//; my $ec = generate("cycle_counter", "ERROR_COUNT", CountName=>"mult_err_cnt");
+
+    logic [`$bW-1`:0] bids;
+    logic [`$bW-1`:0] wins;
+    logic             clk;
+    logic             rst;
+
+    logic 			  perf ; 
+
+
+    logic             triggerStart;
+    logic             triggerStop;
+    int               seed;
+    int               clk_period ;
+
+
+    // Instantiate the design under test and basic bench
+    `$dut->instantiate()` (.*);
+    `$gb->instantiate()`  (.*);
+    //;#`$pc->instantiate()`  (.triggerStart(perf), .triggerStop(triggerStop), .increment(qr_valid), .clk(clk), .rst(rst) );
+    //;#`$ec->instantiate()`  (.triggerStart(triggerStart), .triggerStop(triggerStop), .increment(qr_err), .clk(clk), .rst(rst) );
+   // TODO event counter
+
+    // Simulation Narrative
+    initial begin
+    	triggerStart  = 1'b0 ;
+    	triggerStop = 1'b0 ;
+    	perf = 1'b0 ; 
+    	//@(negedge rst);
+    	repeat(10) @(posedge clk );
+    	triggerStart  = 1'b1 ;
+	$monitor("Monitor:  bids: %b wins: %b @ %0t", bids, wins, $time);
+	repeat (1) @ (posedge clk);
+	bids <= 4'b1111;
+  	repeat (6) @ (posedge clk);
+	bids <= 4'b0000;
+	repeat (1) @ (posedge clk);
+	bids <= 4'b1110;
+	repeat (1) @ (posedge clk);
+	bids <= 4'b1011;
+	repeat (1) @ (posedge clk);
+	bids <= 4'b0010;
+	repeat (1) @ (posedge clk);
+	bids <= 4'b0011;
+	repeat (1) @ (posedge clk);
+	bids <= 4'b0001;
+	repeat (1) @ (posedge clk);    
+	bids <= 4'b0000;
+	repeat (1) @ (posedge clk);
+	bids <= 4'b1100;
+	repeat (10) @ (posedge clk);
+	bids <= 4'b1001;
+	repeat (10) @ (posedge clk);
+	bids <= 4'b0000;
+	repeat(50) @(posedge clk );
+    	triggerStop = 1'b1 ;
+    	repeat(10) @(posedge clk );
+    	$finish();
+    end
+
+	//always @(posedge clk) begin
+	//	bids = $random();
+	//end
+
+    // Verification
+    //always @( posedge clk ) begin
+    //	#1
+    //	// Wait one tick to see what was flopped
+    //    
+    //end
+
+
+
+endmodule 
