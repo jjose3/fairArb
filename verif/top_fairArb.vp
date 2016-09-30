@@ -24,7 +24,7 @@ module `mname` ();
     logic             triggerStart;
     logic             triggerStop;
     int               seed;
-    int               clk_period ;
+    int               clk_period, cnt;
 
 
     // Instantiate the design under test and basic bench
@@ -64,6 +64,14 @@ module `mname` ();
 	repeat (10) @ (posedge clk);
 	bids <= 4'b1001;
 	repeat (10) @ (posedge clk);
+	bids <= 4'b0000;
+	repeat(5) @(posedge clk );
+	cnt = 0;
+	while(cnt < 20) begin
+	bids <= $random();
+	repeat (1) @ (posedge clk);
+	cnt = cnt + 1;
+	end
 	bids <= 4'b0000;
 	repeat(50) @(posedge clk );
     	triggerStop = 1'b1 ;
